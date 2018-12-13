@@ -1,0 +1,15 @@
+$feature-flags: (
+  // components-x: true,
+    ui-shell: true
+);
+
+@import "./carbon/globals/scss/styles";
+
+.box {
+  @include layer("raised");
+}
+
+.bx--select-input {
+  -moz-appearance: none;
+  -webkit-appearance: none;
+}
