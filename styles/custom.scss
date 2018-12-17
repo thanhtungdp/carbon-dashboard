@@ -1,0 +1,20 @@
+.bx--select-input {
+  -moz-appearance: none;
+  -webkit-appearance: none;
+}
+
+// .bx--overflow-menu {
+//   width: auto;
+//   height: auto;
+// }
+
+.bx--data-table-v2 .bx--overflow-menu {
+  opacity: 1;
+}
+
+.bx--data-table-v2 .bx--overflow-menu__icon {
+  transform: none;
+  // width: auto;
+  // height: auto;
+  // display: inline-block;
+}

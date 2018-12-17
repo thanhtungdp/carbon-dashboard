@@ -1,32 +1,32 @@
 import axios from 'axios'
-// import { getToken } from './auth'
+import { getToken } from './auth'
 
 global.headers = {
   Accept: 'application/json'
 }
-// global.authToken = ''
+global.authToken = ''
 
-// export function setGlobalAuthToken (authToken) {
-//   if (authToken) {
-//     global.authToken = authToken
-//   }
-// }
+export function setGlobalAuthToken (authToken) {
+  if (authToken) {
+    global.authToken = authToken
+  }
+}
 
-// export function setGlobalHeaders (headers) {
-//   if (headers) {
-//     global.headers = {
-//       ...global.headers,
-//       ...headers
-//     }
-//   }
-// }
+export function setGlobalHeaders (headers) {
+  if (headers) {
+    global.headers = {
+      ...global.headers,
+      ...headers
+    }
+  }
+}
 
 export const getHeaders = authToken => {
-  // const currentToken = process.browser ? getToken() : authToken
-  // setGlobalAuthToken(currentToken)
+  const currentToken = process.browser ? getToken() : authToken
+  setGlobalAuthToken(currentToken)
   global.headers = {
-    ...global.headers
-    // Authorization: global.authToken
+    ...global.headers,
+    Authorization: global.authToken
   }
   return global.headers
 }

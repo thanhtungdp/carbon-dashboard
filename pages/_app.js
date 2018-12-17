@@ -1,20 +1,45 @@
 import App, { Container } from 'next/app'
 import React from 'react'
+import Router from 'next/router'
 import { Provider } from 'mobx-react'
+import NProgress from 'nprogress'
+import { setGlobalHeaders, setGlobalAuthToken } from 'utils/axios'
+import { getToken } from 'utils/auth'
+
 import '../styles/style.scss'
 
 import { initializeStores } from '../stores'
 
+Router.onRouteChangeStart = url => {
+  console.log('start')
+  NProgress.start()
+}
+Router.onRouteChangeComplete = () => {
+  NProgress.done()
+}
+Router.onRouteChangeError = () => NProgress.done()
+
 class MyMobxApp extends App {
   static async getInitialProps (appContext) {
-    // Get or Create the store with `undefined` as initialState
-    // This allows you to set a custom default initialState
     const mobxStores = initializeStores()
-    // Provide the store to getInitialProps of pages
+    const isAuthenticated = mobxStores.authStore.isAuthenticated
+    if (!process.browser) {
+      const { host, ...headers } = appContext.ctx.req.headers
+      setGlobalHeaders({ headers, origin: host })
+    }
+    if (!process.browser && !isAuthenticated) {
+      const authToken = getToken(appContext.ctx.req)
+      if (authToken) {
+        setGlobalAuthToken(authToken)
+        await mobxStores.authStore.fetchMe(authToken)
+      }
+    }
     appContext.ctx.mobxStores = mobxStores
-
-    let appProps = await App.getInitialProps(appContext)
-
+    appContext.ctx.isAuthenticated = mobxStores.authStore.isAuthenticated
+    let appProps = {}
+    if (App.getInitialProps) {
+      appProps = await App.getInitialProps(appContext)
+    }
     return {
       ...appProps,
       initialMobxStores: mobxStores
@@ -26,7 +51,7 @@ class MyMobxApp extends App {
     const isServer = typeof window === 'undefined'
     this.mobxStores = isServer
       ? props.initialMobxStores
-      : initializeStores(props.initialMobxState)
+      : initializeStores(props.initialMobxStores)
   }
 
   render () {

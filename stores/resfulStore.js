@@ -4,9 +4,10 @@ import paginationConfig from 'config/pagination'
 import { promiseAll } from 'utils/promise'
 import axios from 'utils/axios'
 import { API_ADMIN } from 'config'
+import { autoInjectData } from './utils'
 
 function getUrl (model, path) {
-  return `${API_ADMIN}/${model}${path}`
+  return `${API_ADMIN}/api/v1/${model}${path}`
 }
 
 export default class ResfulStore {
@@ -15,10 +16,13 @@ export default class ResfulStore {
    */
   model = 'base'
 
+  @observable error = {}
+
   /**
    * Get list resful for data with pagination
    */
-  @observable list = {
+  @observable
+  list = {
     data: [],
     isLoading: false,
     isLoaded: false,
@@ -43,7 +47,8 @@ export default class ResfulStore {
   searchKeys = [] // like username, email, ...
   searchPattern = '^($1)' // regex default pattern
 
-  constructor () {
+  constructor (isServer, initialData) {
+    autoInjectData(this, initialData)
     this.api = path => getUrl(this.model, path)
   }
 
@@ -69,7 +74,8 @@ export default class ResfulStore {
     return query
   }
 
-  @action async getList ({ page = 1 } = {}) {
+  @action
+  async getList ({ page = 1 } = {}) {
     let queryPagination = {
       limit: this.pageSize,
       skip: (page - 1) * this.pageSize,
@@ -81,9 +87,7 @@ export default class ResfulStore {
     const queryParams = queryString.stringify(queryPagination)
     if (page === 1) {
       const {
-        count: {
-          data: { count: totalItems }
-        },
+        count: { data: { count: totalItems } },
         list: { data: list }
       } = await promiseAll({
         count: axios.get(this.api(`/count?${queryParams}`)),
@@ -108,5 +112,6 @@ export default class ResfulStore {
       }
       this.list.isLoading = false
     }
+    return this.list.data
   }
 }

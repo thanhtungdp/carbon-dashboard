@@ -1,4 +1,4 @@
-import Link from 'next/link'
+import Link from 'components/link'
 import { Notification16, User16 } from '@carbon/icons-react'
 import {
   Header,

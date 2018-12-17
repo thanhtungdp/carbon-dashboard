@@ -3,13 +3,10 @@ $feature-flags: (
     ui-shell: true
 );
 
-@import "./carbon/globals/scss/styles";
+$font-path: "/static/fonts/ibm";
 
+@import "./carbon/globals/scss/styles";
+@import "./custom";
 .box {
   @include layer("raised");
-}
-
-.bx--select-input {
-  -moz-appearance: none;
-  -webkit-appearance: none;
 }

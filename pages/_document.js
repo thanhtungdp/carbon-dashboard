@@ -33,8 +33,8 @@ export default class MyDocument extends Document {
             href='/static/images/logo-icon.png'
             type='image/png'
           />
-          <link rel='stylesheet' href='/_next/static/style.css' />
           {this.props.styleTags}
+          <link rel='stylesheet' href='/static/css/nprogress.css' />
           <style dangerouslySetInnerHTML={{ __html: this.props.css }} />
           <script dangerouslySetInnerHTML={{ __html: scriptEnv }} />
         </Head>

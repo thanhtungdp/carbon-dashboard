@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 const { Schema } = mongoose
 
+module.exports.SALT_ROUNDS = 10
 module.exports = mongoose.model(
   'users',
   new Schema({

@@ -14,12 +14,18 @@ useStaticRendering(isServer)
 
 let newStores = {}
 
-export function initializeStores (initialData) {
+export function initializeStores (mobxStores = null) {
   Object.keys(stores).map(key => {
     if (isServer) {
-      newStores[key] = new stores[key](isServer, initialData)
+      newStores[key] = new stores[key](
+        isServer,
+        mobxStores ? mobxStores[key] : null
+      )
     } else if (typeof newStores[key] === 'undefined') {
-      newStores[key] = new stores[key](isServer, initialData)
+      newStores[key] = new stores[key](
+        isServer,
+        mobxStores ? mobxStores[key] : null
+      )
     }
   })
   return newStores
